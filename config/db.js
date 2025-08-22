@@ -1,5 +1,8 @@
-const { Pool } = require('pg');
-require('dotenv/config');
+import pkg from 'pg';
+const { Pool } = pkg;
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DB_URL,
@@ -9,22 +12,4 @@ const pool = new Pool({
   max: 10
 });
 
-pool
-  .connect()
-  .then(client => {
-    return client
-      .query('SELECT NOW()')
-      .then(res => {
-        console.log('✅ Database connected successfully at', res.rows[0].now);
-        client.release();
-      })
-      .catch(err => {
-        console.error('❌ Database connection test failed:', err.message);
-        client.release();
-      });
-  })
-  .catch(err => {
-    console.error('❌ Could not connect to the database:', err.message);
-  });
-
-module.exports = pool;
+export default pool;
