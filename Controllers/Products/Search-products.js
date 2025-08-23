@@ -26,7 +26,7 @@ async function searchProducts(req, res) {
 
         const products = result.rows.map(product => ({
             ...product,
-            name: formatNumbersintext(product.name),                 // اعداد داخل نام فارسی
+            name: formatNumbersintext(product.name),
             price: formatNumber(product.price, true),
             number_of_inventory: formatNumber(product.number_of_inventory, false)
         }));
