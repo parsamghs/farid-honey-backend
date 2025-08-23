@@ -8,6 +8,8 @@ import boxen from 'boxen';
 
 import Users_Route from './Routes/Users-Central-Routes.js';
 import ProductsRoute from './Routes/Products-Central-Routes.js';
+import AddressesRoute from './Routes/Addresses-Central-Routes.js';
+import CartsRoute from './Routes/Carts-Central-Routes.js';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -18,6 +20,8 @@ app.use(express.json());
 
 app.use('/api/users', Users_Route);
 app.use('/api/products', ProductsRoute);
+app.use('/api/address',AddressesRoute);
+app.use('/api/carts', CartsRoute);
 
 app.listen(port, () => {
     const message = chalk.white('Server running on') + ' ' +

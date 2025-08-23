@@ -1,16 +1,15 @@
 import pool from '../../Config/db.js';
-import formatNumber from '../../Helpers/Number-formatter.js';
+import { formatNumbersintext } from '../../Helpers/Number-formatter.js';
 
 async function getProducts(req, res) {
     try {
         const result = await pool.query(
-            'SELECT id, name, price, "Number of inventory", image_url, category FROM products ORDER BY id ASC'
+            'SELECT id, name, image_url FROM products ORDER BY id ASC'
         );
 
         const products = result.rows.map(product => ({
             ...product,
-            price: formatNumber(product.price, true),
-            "Number of inventory": formatNumber(product["Number of inventory"], false)
+            name: formatNumbersintext(product.name)
         }));
 
         res.json({ products });

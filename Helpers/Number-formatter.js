@@ -10,4 +10,9 @@ function formatNumber(value, withGrouping = true) {
     }
 }
 
-export default formatNumber;
+function formatNumbersintext(text) {
+    if (!text) return text;
+    return text.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+export { formatNumber, formatNumbersintext };

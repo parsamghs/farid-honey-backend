@@ -1,3 +1,8 @@
+import pool from '../../Config/db.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import regex from '../../Utils/Validator.js'; 
+
 async function loginUser(req, res) {
     try {
         const { phone_number, password } = req.body;
@@ -8,10 +13,6 @@ async function loginUser(req, res) {
 
         if (!regex.phone_number.test(phone_number)) {
             return res.status(400).json({ message: 'شماره تماس معتبر نیست.' });
-        }
-
-        if (!regex.password.test(password)) {
-            return res.status(400).json({ message: 'رمز عبور معتبر نیست.' });
         }
 
         const userResult = await pool.query(
@@ -31,7 +32,9 @@ async function loginUser(req, res) {
         }
 
         const token = jwt.sign(
-            { id: user.id, role: user.role },
+            { id: user.id, role: user.role,
+              phone_number: user.phone_number
+            },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
@@ -48,3 +51,5 @@ async function loginUser(req, res) {
         res.status(500).json({ message: 'خطای سرور' });
     }
 }
+
+export default loginUser;

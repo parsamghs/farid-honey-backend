@@ -1,8 +1,9 @@
 import pool from '../../Config/db.js';
+import { formatNumbersintext } from '../../Helpers/Number-formatter.js';
 
 async function getUserProfile(req, res) {
     try {
-        const userId = req.user.id; // از توکن JWT گرفته میشه (authMiddleware پرش می‌کنه)
+        const userId = req.user.id;
 
         const result = await pool.query(
             'SELECT id, name, phone_number, role FROM users WHERE id = $1',
@@ -13,8 +14,13 @@ async function getUserProfile(req, res) {
             return res.status(404).json({ message: 'کاربر یافت نشد.' });
         }
 
+        const user = result.rows[0];
+
         res.json({
-            user: result.rows[0]
+            user: {
+                ...user,
+                phone_number: formatNumbersintext(user.phone_number) // فارسی کردن شماره تلفن
+            }
         });
 
     } catch (error) {
