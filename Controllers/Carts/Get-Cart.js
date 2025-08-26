@@ -18,9 +18,17 @@ async function getCart(req, res) {
     const cart_id = cartResult.rows[0].id;
 
     const productsResult = await pool.query(
-      `SELECT ci.id AS cart_item_id, p.name, ci.quantity, ci.price, p.image_url
+      `SELECT 
+          ci.id AS cart_item_id, 
+          p.name, 
+          ci.quantity, 
+          ci.price, 
+          ci.size,
+          pi.image_url
        FROM cart_items ci
        JOIN products p ON ci.product_id = p.id
+       LEFT JOIN products_images pi 
+         ON pi.product_id = ci.product_id AND pi.size = ci.size
        WHERE ci.cart_id = $1`,
       [cart_id]
     );
@@ -29,7 +37,9 @@ async function getCart(req, res) {
       ...item,
       name: formatNumbersintext(item.name),
       price: formatNumber(item.price, true), 
-      quantity: formatNumber(item.quantity, false) 
+      quantity: formatNumber(item.quantity, false),
+      size: item.size || null,
+      image_url: item.image_url || null
     }));
 
     const total_price_number = productsResult.rows.reduce((sum, item) => sum + parseFloat(item.price), 0);

@@ -9,11 +9,10 @@ async function updateCartItemQuantity(req, res) {
 
     try {
         const { rows } = await pool.query(
-            `SELECT ci.id, ci.product_id, ci.quantity, p.number_of_inventory, p.price
-       FROM cart_items ci
-       JOIN cart c ON ci.cart_id = c.id
-       JOIN products p ON ci.product_id = p.id
-       WHERE ci.id = $1 AND c.user_id = $2`,
+            `SELECT ci.id, ci.product_id, ci.quantity, ci.price, ci.unit_price
+             FROM cart_items ci
+             JOIN cart c ON ci.cart_id = c.id
+             WHERE ci.id = $1 AND c.user_id = $2`,
             [id, user_id]
         );
 
@@ -22,8 +21,7 @@ async function updateCartItemQuantity(req, res) {
         }
 
         const item = rows[0];
-
-        const currentQuantity = Number(item.quantity);
+        const currentQuantity = parseInt(item.quantity);
 
         const actionMap = {
             increment: currentQuantity + 1,
@@ -41,13 +39,12 @@ async function updateCartItemQuantity(req, res) {
             return res.status(200).json({ message: 'محصول از سبد خرید حذف شد', newQuantity: 0 });
         }
 
-        if (newQuantity > item.number_of_inventory) {
-            return res.status(400).json({ message: `تعداد وارد شده بیشتر از موجودی است (${item.number_of_inventory} عدد موجود است)` });
-        }
+        const unitPrice = parseInt(item.unit_price);
+        const newPrice = unitPrice * newQuantity;
 
         await pool.query(
             'UPDATE cart_items SET quantity = $1, price = $2 WHERE id = $3',
-            [newQuantity, item.price * newQuantity, id]
+            [newQuantity, newPrice, id]
         );
 
         res.status(200).json({ message: 'تعداد محصول بروزرسانی شد', newQuantity });

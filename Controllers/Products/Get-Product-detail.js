@@ -1,5 +1,5 @@
 import pool from '../../Config/db.js';
-import {formatNumber} from '../../Helpers/Number-formatter.js';
+import { formatNumber } from '../../Helpers/Number-formatter.js';
 
 async function getProductDetails(req, res) {
     try {
@@ -10,7 +10,7 @@ async function getProductDetails(req, res) {
         }
 
         const result = await pool.query(
-            `SELECT id, name, price, number_of_inventory, description, image_url, category
+            `SELECT id, name, description, category
              FROM products 
              WHERE id = $1`,
             [id]
@@ -22,10 +22,25 @@ async function getProductDetails(req, res) {
 
         const product = result.rows[0];
 
+        const imagesResult = await pool.query(
+            `SELECT id, image_url, size, price
+             FROM products_images
+             WHERE product_id = $1
+             ORDER BY 
+                CASE 
+                    WHEN size = 'یک کیلو' THEN 1
+                    WHEN size = 'نیم کیلو' THEN 2
+                    ELSE 3
+                END ASC`,
+            [id]
+        );
+
         const formattedProduct = {
             ...product,
-            price: formatNumber(product.price, true),
-            number_of_inventory: formatNumber(product.number_of_inventory, false)
+            images: imagesResult.rows.map(img => ({
+                ...img,
+                price: img.price ? formatNumber(img.price, true) : null
+            }))
         };
 
         res.json({ product: formattedProduct });

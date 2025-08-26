@@ -3,9 +3,23 @@ import { formatNumbersintext } from '../../Helpers/Number-formatter.js';
 
 async function getProducts(req, res) {
     try {
-        const result = await pool.query(
-            'SELECT id, name, image_url FROM products ORDER BY id ASC'
-        );
+        const result = await pool.query(`
+            SELECT 
+                p.id, 
+                p.name, 
+                COALESCE(
+                    (SELECT image_url 
+                     FROM products_images pi 
+                     WHERE pi.product_id = p.id AND pi.size = 'یک کیلوئی'
+                     LIMIT 1),
+                    (SELECT image_url 
+                     FROM products_images pi 
+                     WHERE pi.product_id = p.id AND pi.size = 'نیم کیلوئی'
+                     LIMIT 1)
+                ) AS image_url
+            FROM products p
+            ORDER BY p.id ASC
+        `);
 
         const products = result.rows.map(product => ({
             ...product,
