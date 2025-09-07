@@ -28,8 +28,8 @@ async function getProductDetails(req, res) {
              WHERE product_id = $1
              ORDER BY 
                 CASE 
-                    WHEN size = 'یک کیلو' THEN 1
-                    WHEN size = 'نیم کیلو' THEN 2
+                    WHEN size = 'یک کیلوئی' THEN 1
+                    WHEN size = 'نیم کیلوئی' THEN 2
                     ELSE 3
                 END ASC`,
             [id]
