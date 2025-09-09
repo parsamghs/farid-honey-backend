@@ -1,4 +1,4 @@
-import pool from '../../Config/db.js';
+import { removeFromCartService } from '../../Services/Carts/Delete-Cart-Item.js';
 
 async function removeFromCart(req, res) {
   const user_id = req.user?.id;
@@ -8,23 +8,12 @@ async function removeFromCart(req, res) {
   if (!id) return res.status(400).json({ message: 'شناسه cart_item الزامی است' });
 
   try {
-    const { rows } = await pool.query(
-      `SELECT ci.id 
-       FROM cart_items ci
-       JOIN cart c ON ci.cart_id = c.id
-       WHERE ci.id = $1 AND c.user_id = $2`,
-      [id, user_id]
-    );
-
-    if (!rows.length) {
-      return res.status(404).json({ message: 'محصولی در سبد خرید شما یافت نشد' });
-    }
-
-    await pool.query('DELETE FROM cart_items WHERE id = $1', [id]);
-
+    await removeFromCartService(id, user_id);
     res.status(200).json({ message: 'محصول با موفقیت از سبد حذف شد' });
-
   } catch (err) {
+    if (err.message.includes('یافت نشد')) {
+      return res.status(404).json({ message: err.message });
+    }
     console.error(err);
     res.status(500).json({ message: 'خطا در حذف محصول از سبد' });
   }
