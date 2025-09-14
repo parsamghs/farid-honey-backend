@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model address {
+  id           BigInt  @id @default(autoincrement())
+  user_id      BigInt
+  province     String  @default("100") @db.VarChar
+  city         String  @default("60") @db.VarChar
+  address      String
+  plate        String  @default("10") @db.VarChar
+  unit         String  @default("5") @db.VarChar
+  postal_code String? @default("30") @map("Postal code") @db.VarChar
+  receiver     String  @default("200") @db.VarChar
+  phone_number String? @default("15") @db.VarChar
+  users        users   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model cart {
+  id         BigInt       @id @default(autoincrement())
+  user_id    BigInt?
+  created_at DateTime     @db.Timestamptz(6)
+  users      users?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cart_items cart_items[]
+}
+
+model cart_items {
+  id         BigInt    @id @default(autoincrement())
+  cart_id    BigInt?
+  product_id BigInt?
+  quantity   BigInt?
+  price      String?
+  size       String?   @db.VarChar
+  unit_price String?
+  cart       cart?     @relation(fields: [cart_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model orders {
+  id             BigInt          @id @default(autoincrement())
+  total_price    String?         @default("30") @db.VarChar
+  user_id        BigInt?
+  address_id     BigInt?
+  created_at     DateTime        @db.Timestamptz(6)
+  submit_address submit_address? @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users          users?          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders_item    orders_item[]
+}
+
+model orders_item {
+  id         BigInt    @id @default(autoincrement())
+  order_id   BigInt?
+  product_id BigInt?
+  quantity   String?   @default("3") @db.VarChar
+  price      String?   @default("30") @db.VarChar
+  size       String?
+  orders     orders?   @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model products {
+  id              BigInt            @id @default(autoincrement())
+  name            String            @default("100") @db.VarChar
+  category        String?           @default("60") @db.VarChar
+  description     String?
+  cart_items      cart_items[]
+  orders_item     orders_item[]
+  products_images products_images[]
+}
+
+model products_images {
+  id         BigInt   @id @default(autoincrement())
+  product_id BigInt
+  image_url  String
+  size       String   @db.VarChar
+  price      String?  @db.VarChar
+  products   products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model submit_address {
+  id           BigInt   @id @default(autoincrement())
+  province     String   @db.VarChar(100)
+  city         String   @db.VarChar(50)
+  address      String
+  plate        String   @db.VarChar(10)
+  unit         String   @db.VarChar(5)
+  postal_code  String?  @db.VarChar(20)
+  receiver     String   @db.VarChar(50)
+  phone_number String   @db.VarChar(15)
+  orders       orders[]
+}
+
+model users {
+  id           BigInt           @id @default(autoincrement())
+  name         String           @default("50") @db.VarChar
+  phone_number String           @unique @default("15") @db.VarChar
+  password     String           @default("30") @db.VarChar
+  role         users_role_enum? @default(CUSTOMER)
+  address      address[]
+  cart         cart[]
+  orders       orders[]
+}
+
+enum users_role_enum {
+  CUSTOMER @map("مشتری")
+  ADMIN    @map("ادمین")
+}
