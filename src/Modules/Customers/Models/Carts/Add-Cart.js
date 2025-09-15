@@ -1,7 +1,7 @@
 import prisma from '../../../../Config/db.js';
 
 export async function getProductPrice(productId, size) {
-  return prisma.products_images.findFirst({
+  return prisma.products_size.findFirst({
     where: {
       product_id: productId,
       size: size

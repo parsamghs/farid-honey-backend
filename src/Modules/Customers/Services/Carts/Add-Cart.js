@@ -12,7 +12,7 @@ export async function addToCartService(userId, productId, size) {
   if (!product) {
     throw new Error('محصول با سایز انتخاب شده یافت نشد');
   }
-  const productPriceStr = product.price.toString();
+  const productPrice = Number(product.price);
 
   let cart = await getCartByUser(userId);
   if (!cart) {
@@ -21,10 +21,10 @@ export async function addToCartService(userId, productId, size) {
 
   let item = await getCartItem(cart.id, productId, size);
   if (!item) {
-    await addCartItem(cart.id, productId, size, 1, productPriceStr, productPriceStr);
+    await addCartItem(cart.id, productId, size, 1, productPrice.toString(), productPrice.toString());
   } else {
-    const newQuantity = parseInt(item.quantity) + 1;
-    const unitPrice = parseInt(item.unit_price);
-    await updateCartItem(item.id, newQuantity, unitPrice * newQuantity);
+    const newQuantity = Number(item.quantity) + 1;
+    const unitPrice = Number(item.unit_price);
+    await updateCartItem(item.id, newQuantity, (unitPrice * newQuantity).toString());
   }
 }
