@@ -7,6 +7,6 @@ export async function getProductsService({ category }) {
   return products.map(product => ({
     ...product,
     name: formatNumbersintext(product.name),
-    price: formatNumber(product.price),
+    price: product.price ? formatNumber(product.price) : null,
   }));
 }

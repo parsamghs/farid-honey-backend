@@ -12,26 +12,25 @@ export async function searchProductsRepo(q) {
     select: {
       id: true,
       name: true,
-      products_images: {
+      image_url: true,
+      products_size: {
         select: {
-          image_url: true,
-          size: true
-        },
-        where: {
-          size: { in: ['یک کیلوئی', 'نیم کیلوئی'] }
+          size: true,
+          price: true
         }
       }
     }
   });
 
   return products.map(product => {
-    const images = product.products_images || [];
-    const image = images.find(i => i.size === 'یک کیلوئی') || images.find(i => i.size === 'نیم کیلوئی') || null;
+    const firstSize = (product.products_size ?? [])[0] || null;
 
     return {
       id: product.id.toString(),
       name: product.name,
-      image_url: image?.image_url || null
+      image_url: product.image_url || null,
+      size: firstSize?.size || null,
+      price: firstSize?.price || null
     };
   });
 }

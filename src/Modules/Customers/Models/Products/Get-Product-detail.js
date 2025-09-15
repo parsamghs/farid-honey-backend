@@ -1,34 +1,38 @@
 import prisma from '../../../../Config/db.js';
 
 export async function getProductById(productId) {
-  return prisma.products.findUnique({
+  const product = await prisma.products.findUnique({
     where: { id: productId },
     select: {
       id: true,
       name: true,
       description: true,
-      category: true
-    }
-  });
-}
-
-export async function getProductImages(productId) {
-  const images = await prisma.products_images.findMany({
-    where: { product_id: productId },
-    select: {
-      id: true,
+      category: true,
       image_url: true,
-      size: true,
-      price: true
+      products_size: {
+        select: {
+          id: true,
+          size: true,
+          price: true
+        }
+      }
     }
   });
 
-  const orderMap = { 'یک کیلوئی': 1, 'نیم کیلوئی': 2 };
-  images.sort((a, b) => (orderMap[a.size] || 3) - (orderMap[b.size] || 3));
+  if (!product) return null;
 
-  return images.map(img => ({
-    ...img,
-    id: img.id.toString()
+  const sizes = (product.products_size ?? []).map(p => ({
+    id: p.id.toString(),
+    size: p.size,
+    price: p.price
   }));
-}
 
+  return {
+    id: product.id.toString(),
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    image_url: product.image_url || null,
+    sizes
+  };
+}

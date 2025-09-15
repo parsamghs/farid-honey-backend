@@ -8,33 +8,25 @@ export async function getAllProducts({ category }) {
       id: true,
       name: true,
       category: true,
-      products_images: {
+      image_url: true,
+      products_size: { 
         select: {
-          image_url: true,
-          price: true,
-          size: true
+          price: true
         }
       }
     }
   });
 
   return products.map(product => {
-    const images = product.products_images || [];
-
-    images.sort((a, b) => {
-      const orderMap = { 'یک کیلوئی': 1 };
-      return (orderMap[a.size] || 2) - (orderMap[b.size] || 2);
-    });
-
-    const firstImage = images[0] || null;
+    const prices = product.products_size.map(p => parseFloat(p.price || 0));
+    const maxPrice = prices.length ? Math.max(...prices) : null;
 
     return {
       id: product.id.toString(),
       name: product.name,
       category: product.category,
-      image_url: firstImage?.image_url || null,
-      price: firstImage?.price || null,
-      size: firstImage?.size || null
+      image_url: product.image_url || null,
+      price: maxPrice?.toString() || null
     };
   });
 }
