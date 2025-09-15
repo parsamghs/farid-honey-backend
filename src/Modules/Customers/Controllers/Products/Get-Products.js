@@ -2,7 +2,8 @@ import { getProductsService } from '../../Services/Products/Get-Products.js';
 
 async function getProducts(req, res) {
   try {
-    const products = await getProductsService();
+    const { category } = req.query;
+    const products = await getProductsService({ category });
     res.json({ products });
   } catch (error) {
     console.error(error.message);
