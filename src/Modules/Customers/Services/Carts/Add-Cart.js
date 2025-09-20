@@ -4,10 +4,9 @@ import {
   createCart,
   getCartItem,
   addCartItem,
-  updateCartItem
 } from '../../Models/Carts/Add-Cart.js';
 
-export async function addToCartService(userId, productId, size) {
+export async function addToCartService(userId, productId, size, quantity) {
   const product = await getProductPrice(productId, size);
   if (!product) {
     throw new Error('محصول با سایز انتخاب شده یافت نشد');
@@ -20,11 +19,17 @@ export async function addToCartService(userId, productId, size) {
   }
 
   let item = await getCartItem(cart.id, productId, size);
-  if (!item) {
-    await addCartItem(cart.id, productId, size, 1, productPrice.toString(), productPrice.toString());
-  } else {
-    const newQuantity = Number(item.quantity) + 1;
-    const unitPrice = Number(item.unit_price);
-    await updateCartItem(item.id, newQuantity, (unitPrice * newQuantity).toString());
+  if (item) {
+    throw new Error('این محصول با این سایز در سبد خرید شما موجود هست');
   }
+
+  await addCartItem(
+    cart.id,
+    productId,
+    size,
+    quantity,
+    (productPrice * quantity).toString(),
+    productPrice.toString()
+  );
 }
+
