@@ -8,12 +8,12 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 
 import createLimiter from './src/Middleware/Rate-Limiter.js'
-import AuthRoute from './src/Modules/Auth/Routes/AuthRoutes.js'
-import UsersRoute from './src/Modules/Customers/Routes/Users-Central-Routes.js';
-import ProductsRoute from './src/Modules/Customers/Routes/Products-Central-Routes.js';
-import AddressesRoute from './src/Modules/Customers/Routes/Addresses-Central-Routes.js';
-import CartsRoute from './src/Modules/Customers/Routes/Carts-Central-Routes.js';
-import OrdersRoute from './src/Modules/Customers/Routes/Orders-Central-Routes.js';
+import AuthRoute from './src/app-core/Auth/Routes/AuthRoutes.js'
+import UsersRoute from './src/app-core/Customers/Routes/Users-Central-Routes.js';
+import ProductsRoute from './src/app-core/Customers/Routes/Products-Central-Routes.js';
+import AddressesRoute from './src/app-core/Customers/Routes/Addresses-Central-Routes.js';
+import CartsRoute from './src/app-core/Customers/Routes/Carts-Central-Routes.js';
+import OrdersRoute from './src/app-core/Customers/Routes/Orders-Central-Routes.js';
 
 
 const app = express();

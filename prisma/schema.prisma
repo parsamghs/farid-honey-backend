@@ -65,24 +65,14 @@ model orders_item {
 }
 
 model products {
-  id              BigInt            @id @default(autoincrement())
-  name            String            @default("100") @db.VarChar
-  category        String?           @default("60") @db.VarChar
-  description     String?
-  image_url       String?
-  cart_items      cart_items[]
-  orders_item     orders_item[]
-  products_images products_images[]
-  products_size   products_size[]
-}
-
-model products_images {
-  id         BigInt   @id @default(autoincrement())
-  product_id BigInt
-  image_url  String
-  size       String   @db.VarChar
-  price      String?  @db.VarChar
-  products   products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id            BigInt          @id @default(autoincrement())
+  name          String          @default("100") @db.VarChar
+  category      String?         @default("60") @db.VarChar
+  description   String?
+  image_url     String?
+  cart_items    cart_items[]
+  orders_item   orders_item[]
+  products_size products_size[]
 }
 
 model submit_address {
