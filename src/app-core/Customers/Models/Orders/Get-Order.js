@@ -35,11 +35,7 @@ export async function getOrderItems(orderId) {
       products: {     
         select: {
           name: true,
-          products_images: {
-            where: { size: undefined },
-            select: { image_url: true, size: true },
-            take: 1
-          }
+          image_url: true
         }
       }
     }

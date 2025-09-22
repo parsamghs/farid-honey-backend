@@ -18,7 +18,8 @@ export async function getAddressById(addressId, userId) {
 }
 
 export async function createOrderWithItems({ userId, totalPrice, addressData, cartItems }) {
-  const nowTehran = moment().tz('Asia/Tehran').toDate();
+  const nowUtc = new Date();
+  const nowTehranTime = moment().tz("Asia/Tehran").toDate();
 
   return prisma.$transaction(async (prisma) => {
     const submitAddress = await prisma.submit_address.create({
@@ -30,7 +31,8 @@ export async function createOrderWithItems({ userId, totalPrice, addressData, ca
         total_price: totalPrice.toString(),
         user_id: userId,
         address_id: submitAddress.id,
-        created_at: nowTehran
+        order_date: nowUtc,       
+        order_time: nowTehranTime 
       }
     });
 
@@ -53,3 +55,4 @@ export async function createOrderWithItems({ userId, totalPrice, addressData, ca
     return { orderId: order.id, submitAddressId: submitAddress.id };
   });
 }
+

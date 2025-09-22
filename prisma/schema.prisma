@@ -47,7 +47,8 @@ model orders {
   total_price    String?         @default("30") @db.VarChar
   user_id        BigInt?
   address_id     BigInt?
-  created_at     DateTime        @db.Timestamptz(6)
+  order_date     DateTime        @db.Date
+  order_time     DateTime        @db.Time(6)
   submit_address submit_address? @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users          users?          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orders_item    orders_item[]

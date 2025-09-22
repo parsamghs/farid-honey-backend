@@ -17,7 +17,7 @@ export async function getUserOrdersService(userId) {
       quantity: formatNumber(parseInt(item.quantity), false),
       price: formatNumber(parseInt(item.price)),
       size: item.size,
-      image_url: item.products.products_images[0]?.image_url || null
+      image_url: item.products.image_url || null
     }));
 
     const addr = order.submit_address;

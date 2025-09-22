@@ -4,7 +4,7 @@ function formatNumber(value, withGrouping = true) {
     const num = Number(value);
 
     if (withGrouping) {
-        return num.toLocaleString('fa-IR'); 
+        return num.toLocaleString('fa-IR');
     } else {
         return num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
     }
@@ -14,5 +14,6 @@ function formatNumbersintext(text) {
     if (!text) return text;
     return text.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 }
+
 
 export { formatNumber, formatNumbersintext };
