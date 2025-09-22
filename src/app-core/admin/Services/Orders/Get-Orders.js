@@ -14,11 +14,11 @@ export const getOrders = async ({ page = 1, limit = 10 } = {}) => {
     const time = moment(order.order_time).format("HH:mm");
 
     return {
-      id: order.id.toString(),                  // آی‌دی فارسی
-      total_price: formatNumber(order.total_price, true), // قیمت با جداکننده و فارسی
+      id: order.id.toString(),      
+      total_price: formatNumber(order.total_price, true),
       province: order.submit_address?.province || null,
-      order_date: formatNumbersintext(jalaliDate),        // تاریخ فارسی
-      order_time: formatNumbersintext(time),              // ساعت فارسی
+      order_date: formatNumbersintext(jalaliDate),  
+      order_time: formatNumbersintext(time),    
       user: {
         ...order.users,
         id: order.users.id,   
