@@ -1,24 +1,14 @@
-import prisma from "../../../../Config/db.js";
+import prisma from '../../../../Config/db.js';
 
-/**
- * 
- * @param {number} skip
- * @param {number} take
- */
-export const getOrdersWithPagination = async (skip, take) => {
+export const findOrders = async ({ skip = 0, limit = 10 } = {}) => {
   return prisma.orders.findMany({
     skip,
-    take,
-    orderBy: [
-      { order_date: 'desc' },
-      { order_time: 'desc' }
-    ],
-    select: {
-      total_price: true,
-      order_date: true,
-      order_time: true,
+    take: limit,
+    orderBy: { order_date: "desc" },
+    include: {
       users: {
         select: {
+          id: true,
           name: true,
           phone_number: true,
         },
@@ -30,8 +20,4 @@ export const getOrdersWithPagination = async (skip, take) => {
       },
     },
   });
-};
-
-export const countOrders = async () => {
-  return prisma.orders.count();
 };

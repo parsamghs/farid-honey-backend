@@ -7,7 +7,13 @@ import {
 } from '../../Models/Carts/Add-Cart.js';
 
 export async function addToCartService(userId, productId, size, quantity) {
-  const product = await getProductPrice(productId, size);
+  const normalizedProductId = Number(productId);
+
+  if (isNaN(normalizedProductId)) {
+    throw new Error('شناسه محصول معتبر نیست');
+  }
+
+  const product = await getProductPrice(normalizedProductId, size);
   if (!product) {
     throw new Error('محصول با سایز انتخاب شده یافت نشد');
   }
@@ -18,18 +24,17 @@ export async function addToCartService(userId, productId, size, quantity) {
     cart = await createCart(userId);
   }
 
-  let item = await getCartItem(cart.id, productId, size);
+  let item = await getCartItem(cart.id, normalizedProductId, size);
   if (item) {
     throw new Error('این محصول با این سایز در سبد خرید شما موجود هست');
   }
 
   await addCartItem(
     cart.id,
-    productId,
+    normalizedProductId,
     size,
     quantity,
     (productPrice * quantity).toString(),
     productPrice.toString()
   );
 }
-

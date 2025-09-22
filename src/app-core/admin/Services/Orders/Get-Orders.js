@@ -1,31 +1,29 @@
-import { getOrdersWithPagination, countOrders } from "../../Models/Orders/Get-Orders.js";
+import moment from "moment-jalaali";
+import { findOrders } from "../../Models/Orders/Get-Orders.js";
 import { formatNumber, formatNumbersintext } from "../../../../Helpers/Number-formatter.js";
-import { formatJalaliDate } from "../../../../Helpers/Date-formatter.js";
 
-export const listOrders = async (page = 1, limit = 10) => {
+moment.loadPersian({ dialect: "persian-modern", usePersianDigits: false });
+
+export const getOrders = async ({ page = 1, limit = 10 } = {}) => {
   const skip = (page - 1) * limit;
-  const take = limit;
 
-  const [orders, total] = await Promise.all([
-    getOrdersWithPagination(skip, take),
-    countOrders(),
-  ]);
+  const orders = await findOrders({ skip, limit });
 
-  const formatted = orders.map(order => ({
-    name: order.users?.name ? formatNumbersintext(order.users.name) : null,
-    phone_number: order.users?.phone_number ? formatNumber(order.users.phone_number, false) : null,
-    province: order.submit_address?.province ? formatNumbersintext(order.submit_address.province) : null,
-    total_price: formatNumber(order.total_price),
-    created_at: formatJalaliDate(order.order_date, order.order_time, "jYYYY/jMM/jDD HH:mm"),
-  }));
+  return orders.map((order) => {
+    const jalaliDate = moment(order.order_date).format("jYYYY/jMM/jDD");
+    const time = moment(order.order_time).format("HH:mm");
 
-  return {
-    data: formatted,
-    meta: {
-      total: formatNumber(total),
-      page: formatNumber(page),
-      limit: formatNumber(limit),
-      totalPages: formatNumber(Math.ceil(total / limit)),
-    },
-  };
+    return {
+      id: order.id.toString(),                  // آی‌دی فارسی
+      total_price: formatNumber(order.total_price, true), // قیمت با جداکننده و فارسی
+      province: order.submit_address?.province || null,
+      order_date: formatNumbersintext(jalaliDate),        // تاریخ فارسی
+      order_time: formatNumbersintext(time),              // ساعت فارسی
+      user: {
+        ...order.users,
+        id: order.users.id,   
+        phone_number: formatNumbersintext(order.users.phone_number),
+      },
+    };
+  });
 };
