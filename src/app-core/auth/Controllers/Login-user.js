@@ -6,12 +6,11 @@ async function loginUser(req, res) {
     const { phone_number, password } = req.body;
     const { accessToken, refreshToken, name, role } = await AuthService.login({ phone_number, password });
 
-    // ست کردن Refresh Token در HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict", // یا "Lax" بسته به نیازت
-      maxAge: ms(process.env.JWT_REFRESH_EXPIRES_IN), // از env بگیر، نه عدد ثابت
+      sameSite: "Strict",
+      maxAge: ms(process.env.JWT_REFRESH_EXPIRES_IN),
     });
 
     res.json({ accessToken, name, phone_number, role });
