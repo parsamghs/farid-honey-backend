@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "cross-env NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node index.js",
     "postinstall": "prisma generate"
   },
+  // in powershelll : $env:NODE_ENV="production"; node index.js
   "keywords": [],
   "author": "",
   "license": "ISC",
