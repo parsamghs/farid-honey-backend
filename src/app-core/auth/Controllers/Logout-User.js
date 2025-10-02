@@ -1,4 +1,4 @@
-import AuthService from "../Services/Logout-user.js";
+import AuthService from "../Services/Logout-User";
 
 async function logoutUser(req, res) {
   try {
