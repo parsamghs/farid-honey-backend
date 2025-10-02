@@ -8,7 +8,6 @@
     "start": "NODE_ENV=production node index.js",
     "postinstall": "prisma generate"
   },
-  // in powershelll : $env:NODE_ENV="production"; node index.js
   "keywords": [],
   "author": "",
   "license": "ISC",
