@@ -9,7 +9,7 @@ import customersRoutes from './app-core/Customer-Routes.js';
 import adminRoutes from './app-core/Admin-Routes.js';
 
 const app = express();
-app.set("trust proxy");
+app.set("trust proxy", 1);
 
 app.use(cors());
 app.use(express.json());
