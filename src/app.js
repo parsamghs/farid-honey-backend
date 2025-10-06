@@ -8,11 +8,16 @@ import customersRoutes from './app-core/Customer-Routes.js';
 import adminRoutes from './app-core/Admin-Routes.js';
 
 const app = express();
+app.set("trust proxy");
 
 app.use(cors());
 app.use(express.json());
 app.use(createLimiter());
 app.use(cookieParser());
+
+app.use(morgan('combined', {
+  stream: { write: (message) => logger.info(message.trim())
+  }}));
 
 app.use('/api/auth', AuthRoute);
 app.use('/api', customersRoutes);
