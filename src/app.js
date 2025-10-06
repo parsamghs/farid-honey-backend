@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import morgan from "morgan";
 
 import createLimiter from './Middleware/Rate-Limiter.js';
 import AuthRoute from './app-core/auth/Routes/AuthRoutes.js';
