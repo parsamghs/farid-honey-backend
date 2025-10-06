@@ -16,9 +16,7 @@ app.use(express.json());
 app.use(createLimiter());
 app.use(cookieParser());
 
-app.use(morgan('combined', {
-  stream: { write: (message) => logger.info(message.trim())
-  }}));
+app.use(morgan('combined'));
 
 app.use('/api/auth', AuthRoute);
 app.use('/api', customersRoutes);
