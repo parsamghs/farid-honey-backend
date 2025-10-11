@@ -8,7 +8,7 @@ async function updateAddress(req, res) {
   const addressId = req.params.id;
   if (!addressId) return res.status(400).json({ message: 'آیدی آدرس الزامی است' });
 
-  const { province, city, address, plate, unit, Postal_code, receiver } = req.body;
+  const { province, city, address, plate, unit, postal_code, receiver, phone_number } = req.body;
 
   const updatedValues = {
     province,
@@ -16,8 +16,9 @@ async function updateAddress(req, res) {
     address,
     plate,
     unit,
-    postal_code: Postal_code,
-    receiver
+    postal_code,
+    receiver,
+    phone_number
   };
 
   const validations = [
@@ -26,8 +27,9 @@ async function updateAddress(req, res) {
     { field: 'address', value: updatedValues.address, required: true, regex: regex.address, message: 'آدرس معتبر نیست' },
     { field: 'plate', value: updatedValues.plate, required: true, regex: regex.plate, message: 'پلاک معتبر نیست' },
     { field: 'unit', value: updatedValues.unit, required: true, regex: regex.unit, message: 'واحد معتبر نیست' },
-    { field: 'postal_code', value: updatedValues.Postal_code, required: false, regex: regex.postal_code, message: 'کد پستی معتبر نیست' },
+    { field: 'postal_code', value: updatedValues.postal_code, required: false, regex: regex.postal_code, message: 'کد پستی معتبر نیست' },
     { field: 'receiver', value: updatedValues.receiver, required: true, regex: regex.receiver, message: 'دریافت‌کننده معتبر نیست' },
+    { field: 'phone_number', value: updatedValues.phone_number, required: false, regex: regex.phone_number, message: 'شماره تلفن معتبر نیست' },
   ];
 
   const errors = [];

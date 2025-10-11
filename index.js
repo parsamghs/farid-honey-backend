@@ -4,5 +4,5 @@ import app from './src/app.js';
 const port = config.port;
 
 app.listen(port, () => {
-  console.log(`Server is running 🚀`);
+  console.log(`Server is running`);
 });

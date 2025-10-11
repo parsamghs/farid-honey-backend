@@ -21,14 +21,12 @@ export async function updateAddressById(addressId, userId, updatedValues) {
   if (updatedValues.address !== undefined) dataToUpdate.address = updatedValues.address;
   if (updatedValues.plate !== undefined) dataToUpdate.plate = updatedValues.plate;
   if (updatedValues.unit !== undefined) dataToUpdate.unit = updatedValues.unit;
-  if (updatedValues.Postal_code !== undefined) dataToUpdate.Postal_code = updatedValues.Postal_code;
+  if (updatedValues.postal_code !== undefined) dataToUpdate.postal_code = updatedValues.postal_code;
   if (updatedValues.receiver !== undefined) dataToUpdate.receiver = updatedValues.receiver;
+  if (updatedValues.phone_number !== undefined) dataToUpdate.phone_number = updatedValues.phone_number;
 
-  const updated = await prisma.address.update({
+  return prisma.address.update({
     where: { id: addressId },
     data: dataToUpdate
   });
-
-  return updated;
 }
-
