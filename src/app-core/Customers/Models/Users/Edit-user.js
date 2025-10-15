@@ -21,7 +21,11 @@ const UserRepository = {
     return await prisma.users.update({
       where: { id: BigInt(id) },
       data: fieldsObject,
-      select: { id: true, name: true, phone_number: true, role: true }
+      select: {
+        id: true, name: true,
+        phone_number: true, role: true,
+        gmail: true, born_date: true
+      }
     });
   }
 };

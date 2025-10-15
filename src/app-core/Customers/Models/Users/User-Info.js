@@ -4,7 +4,7 @@ const UserRepository = {
   findById: async (id) => {
     return await prisma.users.findUnique({
       where: { id: BigInt(id) },
-      select: { id: true, name: true, phone_number: true, role: true }
+      select: { id: true, name: true, phone_number: true, role: true, gmail:true, born_date:true }
     });
   }
 };

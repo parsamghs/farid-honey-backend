@@ -7,10 +7,24 @@ const UserRepository = {
     });
   },
 
-  create: async ({ name, phone_number, password, role }) => {
+  create: async ({ name, phone_number, password, role, gmail, born_date }) => {
     return await prisma.users.create({
-      data: { name, phone_number, password, role },
-      select: { id: true, name: true, phone_number: true, role: true }
+      data: {
+        name,
+        phone_number,
+        password,
+        role,
+        gmail,
+        born_date
+      },
+      select: {
+        id: true,
+        name: true,
+        phone_number: true,
+        role: true,
+        gmail: true,
+        born_date: true
+      }
     });
   }
 };

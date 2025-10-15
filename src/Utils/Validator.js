@@ -8,7 +8,9 @@ export const regex = {
   province: /^[\u0600-\u06FF\s]{1,100}$/,
   city: /^[\u0600-\u06FF\s]{1,50}$/,
   postal_code: /^[0-9]{1,20}$/,
-  receiver: /^[\u0600-\u06FFa-zA-Z\s]{1,50}$/
+  receiver: /^[\u0600-\u06FFa-zA-Z\s]{1,50}$/,
+  email: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  birth_date: /^(13|14)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
 };
 
 export default regex;
