@@ -3,10 +3,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from "morgan";
 
-// import createLimiter from './Middleware/Rate-Limiter.js';
-// import AuthRoute from './app-core/auth/Routes/AuthRoutes.js';
-// import customersRoutes from './app-core/Customer-Routes.js';
-// import adminRoutes from './app-core/Admin-Routes.js';
+import createLimiter from './Middleware/Rate-Limiter.js';
+import AuthRoute from './app-core/auth/Routes/AuthRoutes.js';
+import customersRoutes from './app-core/Customer-Routes.js';
+import adminRoutes from './app-core/Admin-Routes.js';
 
 const app = express();
 app.set("trust proxy", 1);
