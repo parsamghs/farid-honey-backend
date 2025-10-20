@@ -11,24 +11,7 @@ import adminRoutes from './app-core/Admin-Routes.js';
 const app = express();
 app.set("trust proxy", 1);
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://api.asalfarid.com',
-  'https://asalfarid.com',
-];
-
-app.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin) return callback(null, true);
-//     if (allowedOrigins.includes(origin)) {
-//       return callback(null, true);
-//     } else {
-//       return callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-  credentials: true,
-}));
-
+app.use(cors());
 app.use(express.json());
 app.use(createLimiter());
 app.use(cookieParser());
