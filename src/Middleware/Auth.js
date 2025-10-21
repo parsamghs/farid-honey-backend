@@ -15,7 +15,7 @@ function authMiddleware(req, res, next) {
 
         next();
     } catch (error) {
-        return res.status(403).json({ message: 'توکن نامعتبر یا منقضی شده است.' });
+        return res.status(401).json({ message: 'توکن نامعتبر یا منقضی شده است.' });
     }
 }
 
