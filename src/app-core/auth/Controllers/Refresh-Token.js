@@ -1,3 +1,4 @@
+import { refreshCookieOptions } from "../../../Utils/cookies.js";
 import RefreshService from "../Services/Refresh-Token.js";
 
 async function refreshToken(req, res) {
@@ -5,12 +6,7 @@ async function refreshToken(req, res) {
     const { refreshToken } = req.cookies;
     const result = await RefreshService.refresh(refreshToken);
 
-    res.cookie("refreshToken", result.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      path: "/",
-    });
+    res.cookie("refreshToken", result.refreshToken,  refreshCookieOptions());
 
     res.json({ accessToken: result.accessToken });
   } catch (err) {

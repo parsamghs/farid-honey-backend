@@ -10,11 +10,7 @@ async function logoutUser(req, res) {
 
     await AuthService.logout(refreshToken);
 
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    });
+    res.clearCookie("refreshToken", "", { ...refreshCookieOptions(), maxAge: 0 });
 
     res.json({ message: "با موفقیت خارج شدید." });
   } catch (err) {
