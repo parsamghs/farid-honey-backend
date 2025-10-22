@@ -1,57 +1,42 @@
 import soap from "soap";
 import bcryptjs from "bcryptjs";
 import { smsConfig } from "./config.js";
+import { toNikMsisdn } from "./phone-formater.js";
 
 const OTP_LENGTH = 6;
 const OTP_EXPIRY_MINUTES = 5;
 
 export function generateOtp() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return Math.floor(10**(OTP_LENGTH-1) + Math.random() * 9 * 10**(OTP_LENGTH-1)).toString();
 }
 
 export async function hashOtp(otp) {
-  const saltRounds = 10;
-  const hash = await bcryptjs.hash(otp, saltRounds);
-  return hash;
+  return bcryptjs.hash(otp, 10);
 }
 
 export async function sendPtpSms(number, message) {
-  const authenticate = {
-    security: {
-      Username: smsConfig.username,
-      Password: smsConfig.password,
-    },
-  };
-
+  const msisdn = toNikMsisdn(number);
+  const sender  = smsConfig.senderNumber;
   const ptpModel = {
-    security: {
-      Username: smsConfig.username,
-      Password: smsConfig.password,
-    },
+    security: { Username: smsConfig.username, Password: smsConfig.password },
     model: {
       Message: [{ string: message }],
-      SenderNumber: smsConfig.senderNumber,
-      Numbers: [{ string: number }],
+      SenderNumber: sender,
+      Numbers: [{ string: msisdn }],
       SendType: "Normal",
-      YourMessageId: [{ long: "1" }],
+      YourMessageId: [{ long: String(Date.now()) }],
     },
   };
 
   try {
     const client = await soap.createClientAsync(smsConfig.wsdlUrl);
     const [result] = await client.PtpSmsAsync(ptpModel);
+    const status = result?.PtpSmsResult?.Status;
+    console.log("PtpSms status:", status);
 
-    console.log("📨 نتیجه کامل ارسال:", JSON.stringify(result, null, 2));
-
-    if (result.PtpSmsResult?.Status === "Success") {
-      console.log(`پیامک با موفقیت به ${number} ارسال شد.`);
-      return true;
-    } else {
-      console.log(`خطا در ارسال پیامک به ${number}:`, result.PtpSmsResult?.Status);
-      return false;
-    }
+    return status === "Success";
   } catch (err) {
-    console.log(`خطا در ارسال پیامک به ${number}:`, err);
+    console.error("Soap error:", err);
     return false;
   }
 }
@@ -59,14 +44,6 @@ export async function sendPtpSms(number, message) {
 export async function generateAndSendOtp(phoneNumber) {
   const otp = generateOtp();
   const otpHash = await hashOtp(otp);
-  const message = `کد تایید شما: ${otp}`;
-
-  const sent = await sendPtpSms(phoneNumber, message);
-
-  return {
-    otp,
-    otpHash,
-    sent,
-    expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
-  };
+  const sent = await sendPtpSms(phoneNumber, `کد تایید شما: ${otp}`);
+  return { otp, otpHash, sent, expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60000) };
 }
