@@ -9,13 +9,13 @@ const UserService = {
       throw { status: 404, message: "کاربر یافت نشد." };
     }
 
-    // const bornjalali = moment(user.born_date).format("jYYYY/jMM/jDD");
+    const bornjalali = moment(user.born_date).format("jYYYY/jMM/jDD");
     
     return {
       ...user,
       id: user.id.toString(),
       phone_number: formatNumbersintext(user.phone_number),
-      // born_date:formatNumbersintext(bornjalali)
+      born_date:formatNumbersintext(bornjalali)
     };
   }
 };
