@@ -95,6 +95,8 @@ model users {
   phone_number  String           @unique @default("15") @db.VarChar
   password      String           @default("30") @db.VarChar
   role          users_role_enum? @default(CUSTOMER)
+  gmail         String?
+  born_date     DateTime?        @db.Date
   address       address[]
   cart          cart[]
   orders        orders[]
