@@ -6,9 +6,9 @@ export function refreshCookieOptions() {
 
   return {
     httpOnly: true,
-    secure: isProd,                // حتماً روی https در پروداکشن
-    sameSite: isProd ? "none" : "lax", // برای فرانت و بک روی دامنه‌های جدا، none لازم است
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     path: "/",
-    maxAge,                        // مهم: در refresh هم maxAge ست کن
+    maxAge,
   };
 }
