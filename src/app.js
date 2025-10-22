@@ -11,6 +11,7 @@ const app = express();
 const allowedOrigins = new Set([
     'http://localhost:3000',
     'https://asalfarid.com',
+    'https://www.asalfarid.com' ,
 ]);
 
 app.use((req, res, next) => {
