@@ -17,7 +17,7 @@ app.use((req, res, next) => {
     const origin = req.headers.origin;
 
     if (origin && allowedOrigins.has(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin); // نه '*'
+        res.setHeader('Access-Control-Allow-Origin', origin);
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.setHeader('Vary', 'Origin');
         res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
@@ -25,10 +25,7 @@ app.use((req, res, next) => {
     }
 
     if (req.method === 'OPTIONS') {
-        // پاسخ preflight
-        return res.sendStatus(204);
-    }
-
+        return res.sendStatus(204);}
     next();
 });
 
@@ -47,27 +44,14 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use(cors({
-//     origin: [
-//         "http://localhost:3000",     
-//         "https://asalfarid.com", 
-//     ],
-//     credentials: true,            
-// }));
-
 app.set("trust proxy", 1);
-
-// app.use(cors());
 app.use(express.json());
 app.use(createLimiter());
 app.use(cookieParser());
-
 app.use(morgan('combined'));
 
 app.use('/api/auth', AuthRoute);
 app.use('/api', customersRoutes);
 app.use('/api', adminRoutes);
-
-
 
 export default app;
