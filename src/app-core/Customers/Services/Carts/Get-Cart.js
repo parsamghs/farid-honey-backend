@@ -8,6 +8,8 @@ export async function getCartService(userId) {
   }
 
   const cartItems = await getCartItems(cart.id);
+  
+   cartItems.sort((a, b) => Number(a.id) - Number(b.id));
 
   const products = cartItems.map(item => ({
     id: item.id.toString(),
